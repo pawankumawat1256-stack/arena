@@ -1,0 +1,37 @@
+name: ebook-agent
+
+x-app: &app
+  build: .
+  image: ebook-agent:local
+  env_file: .env
+  volumes:
+    - ./data:/app/data
+    - ./secrets:/app/secrets
+  restart: unless-stopped
+
+services:
+  api:
+    <<: *app
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  scheduler:
+    <<: *app
+    command: python scheduler.py
+    depends_on:
+      - api
+
+  dashboard:
+    <<: *app
+    command: streamlit run dashboard.py --server.address=0.0.0.0 --server.port=8501 --server.headless=true
+    environment:
+      DASHBOARD_API_URL: http://api:8000
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
