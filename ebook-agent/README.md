@@ -192,7 +192,17 @@ Then:
 1. Finish the book file (you edit the generated Markdown and produce the PDF). Place it under `DATA_DIR/ebooks/`.
 2. Create products (`POST /products`), with `file_path` pointing at that file.
 3. Attach an image to each post (`POST /posts/{id}/image`), then either schedule a time (`POST /posts/{id}/schedule`) or let the Monday job schedule the next drafts that have images.
-4. Check numbers in the dashboard. Enter KDP royalties by hand (`POST /sales/manual`), because KDP has no public royalty API.
+4. Check the numbers on the dashboard's Overview and Analyst pages. Enter KDP royalties by hand on the Sales page (or with `POST /sales/manual`), because KDP has no public royalty API.
+
+### Dashboard pages
+
+- **Overview:** paid units, gross, net after fees, refund rate, clicks, and sales per 100 clicks (shown once there are at least 30 clicks), plus net sales by day. Totals are in USD. Test sales and non-USD sales are left out.
+- **Ebooks:** the outline, the computed pricing with fees and net on each platform, the three cover concepts with prompts you can copy, the research claims to verify, and the files and products for each ebook.
+- **Run agents:** start research for a new ebook, or run research, writing, design, pricing, or marketing for an existing one.
+- **Analyst:** the latest analyst report for one ebook or for all ebooks: what is working, what is failing, how to improve sales, and the snapshot of numbers the analyst used.
+- **Sales:** manual entry for KDP royalty lines and other platforms, the recent sales list, and resending an access link.
+- **Marketing:** products, posts, and the image URL and publish time for each post. Times are entered in IST.
+- **Runs:** every agent run with its status and error. The input and output are shown for finished runs.
 
 ## API endpoints
 
@@ -318,7 +328,7 @@ pip install -r requirements-dev.txt
 pytest -q
 ```
 
-92 tests, all offline. They use a fake chat model, and fake Gmail, Gumroad, Instagram, Stripe, and Notion calls. They cover:
+122 tests, all offline. They use a fake chat model, and fake Gmail, Gumroad, Instagram, Stripe, and Notion calls. They cover:
 
 - Royalty and fee math against worked examples
 - Each agent's output validation (hex colors, "no text" in image prompts, sequence lengths and delays)
@@ -328,13 +338,13 @@ pytest -q
 - Email sequences: timing, unsubscribe, blocked without a postal address, failures and retry
 - Instagram: quota (live and fallback), deferral, transient and permanent failures, publish flow
 - HTTP retries, Stripe signature and checkout, Notion batching, scheduler job registration
-- A Streamlit smoke test of the dashboard script
+- The Streamlit dashboard (`tests/test_dashboard.py`): login, every page with and without data, the analyst report, the manual-sale and scheduling guards, readable API error messages, and escaping of model output in the cover colours
 
-Also run during development: `ruff check` (E, F, W, I, B rules) passes, and `compileall` passes.
+Also run during development: `compileall` passes, and `ruff check` (E, F, W, I, B rules, 130-column lines) passes for `dashboard.py` and `tests/test_dashboard.py`. Ruff still reports long lines (E501) and FastAPI `Depends` defaults (B008) in other modules.
 
 **Not run here:** the Docker image build (Docker was not available in the build environment), a live call to OpenAI, Gumroad, Instagram, Gmail, Drive, Notion, or Stripe (the build sandbox only reaches package registries and GitHub), and PostgreSQL. The code paths for those are covered by fakes, not by live calls.
 
-Smoke-tested by starting the processes: the API (health, 401 without a key, 401 for a wrong webhook token, 400 for a malformed ping, 200 with a failed event recorded when Gumroad is not configured, failed agent run recorded with its error), the Streamlit dashboard (health and page load), and the scheduler (seven jobs registered, clean shutdown on SIGTERM).
+Smoke-tested by starting the processes: the API (health, 401 without a key, 401 for a wrong webhook token, 400 for a malformed ping, 200 with a failed event recorded when Gumroad is not configured, failed agent run recorded with its error), the Streamlit dashboard (all seven pages and the Ebooks tabs load with no exceptions in a headless browser, against a throwaway database with sample data), and the scheduler (seven jobs registered, clean shutdown on SIGTERM).
 
 ## Known limits
 
