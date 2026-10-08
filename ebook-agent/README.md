@@ -200,9 +200,9 @@ Then:
 - **Ebooks:** the outline, the computed pricing with fees and net on each platform, the three cover concepts with prompts you can copy, the research claims to verify, and the files and products for each ebook.
 - **Run agents:** start research for a new ebook, or run research, writing, design, pricing, or marketing for an existing one.
 - **Analyst:** the latest analyst report for one ebook or for all ebooks: what is working, what is failing, how to improve sales, and the snapshot of numbers the analyst used.
-- **Sales:** manual entry for KDP royalty lines and other platforms, the recent sales list, and resending an access link.
+- **Sales:** manual entry for KDP royalty lines and other platforms, the recent sales list, and resending an access link to a sale that has a buyer email.
 - **Marketing:** products, posts, and the image URL and publish time for each post. Times are entered in IST.
-- **Runs:** every agent run with its status and error. The input and output are shown for finished runs.
+- **Runs:** every agent run with its status and error. The input is shown for every run, and the output for runs that succeeded.
 
 ## API endpoints
 
