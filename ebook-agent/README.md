@@ -130,6 +130,8 @@ Copy `.env.example` to `.env` and fill in the values. The file lists every setti
 
 ## Setup
 
+For a step-by-step launch on a server (non-developer guide, with where to get each API key), see [GO-LIVE-CHECKLIST.md](GO-LIVE-CHECKLIST.md).
+
 ### Option A: Docker Compose
 
 ```bash
@@ -267,8 +269,9 @@ SQLAlchemy models in `db/models.py`. Money is stored as integer cents. Datetimes
 
 **Pricing.** `core/pricing.py` implements:
 
+- Distribution strategy: **wide distribution**. The book is not enrolled in KDP Select. The Kindle edition is sold through Amazon KDP, and the PDF is sold directly on Gumroad and Payhip.
 - KDP US: 70% of (list price − delivery), where delivery is US$0.15 per MB. This applies in the US$2.99–12.99 band. Otherwise 35% of the list price.
-- KDP India: 18% GST is removed first. 70% applies only with KDP Select and the ₹99–599 band, with delivery at ₹7 per MB. Otherwise 35%.
+- KDP India: 18% GST is removed first. 70% applies only with KDP Select and the ₹99–599 band, with delivery at ₹7 per MB. Because the book is wide (not KDP Select), Indian sales earn 35%.
 - Gumroad: 10% + US$0.50 direct, or 30% with Discover.
 - Payhip: Free 5%, Plus 2% at US$29/month, Pro 0% at US$99/month, before processor fees.
 - Break-even file size for the 70% royalty against 35%: about 33.3 MB at $9.99.

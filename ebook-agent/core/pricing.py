@@ -2,9 +2,12 @@
 
 Rules encoded here (checked against the KDP, Gumroad and Payhip pages during research):
 - KDP royalty: 70% x (list price - VAT - delivery cost) in the 70% band; 35% x (list price - VAT) otherwise.
+  This matches KDP's eBook Royalties help formula: royalty rate x (list price - applicable VAT - delivery costs).
 - KDP 70% band: US$2.99 to US$12.99 on Amazon.com; INR 99 to 599 including GST on Amazon.in.
 - KDP delivery cost: US$0.15 per MB on Amazon.com; INR 7 per MB on Amazon.in.
 - India: 18% GST is included in the list price and removed before royalties are calculated.
+- Distribution strategy: WIDE. The book is not enrolled in KDP Select. The 70% option in India needs KDP Select,
+  so Indian sales earn 35%. The PDF is sold directly on Gumroad and Payhip, not through KDP.
 - Gumroad direct fee: 10% + US$0.50 per sale. Gumroad Discover: 30%.
 - Payhip: Free 5%, Plus 2% for US$29 per month, Pro 0% for US$99 per month. Processor fees are extra.
 """
@@ -162,6 +165,7 @@ def build_pricing_plan(
         return {"payhip_free_fee_usd": _s(fee), "payhip_free_net_before_processor_usd": _s(q(price - fee))}
 
     return {
+        "distribution_strategy": "wide (not KDP Select)",
         "basic_kdp_us": {
             "option": us.option,
             "delivery_usd": _s(us.delivery_cost),
